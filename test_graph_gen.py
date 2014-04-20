@@ -31,23 +31,42 @@ def main():
 
 def generate_graph():
     '''
-    This is just an example usage that generates a simple disjoint graph
+    This is just an example usage that generates a graph
     '''
+
+    two_train = graph18.Train(2)
+    two_plus_train = graph18.Train(0,2,2)
+    three_train = graph18.Train(3)
+    three_plus_train = graph18.Train(0,3,3)
+
+    prr = graph18.Company('Pennsylvannia RailRoad', [two_train])
+    nyc = graph18.Company('New York Central', [two_plus_train, two_train])
+    bo = graph18.Company('Baltimore & Ohio')
+    nynh = graph18.nynh
+
+    bo.add_train(three_train)
+    nynh.add_train(two_train)
+
+
     G = graph18.Graph()
-
     nodes = dict()
-    nodes['a'] = graph18.Cities(value=10, color=graph18.colors.y, stop_type='city', capacity=1)
-    nodes['b'] = graph18.Cities(value=30, color=graph18.colors.y, stop_type='city', capacity=1, owners=['prr'])
-    nodes['c'] = graph18.Cities(value=20, color=graph18.colors.g, stop_type='city', capacity=1, owners=['bo'])
-    nodes['d'] = graph18.Cities(value=10, color=graph18.colors.y, stop_type='town', capacity=1)
-    nodes['e'] = graph18.Cities(value=20, color=graph18.colors.y, stop_type='city', capacity=1, owners=['nyc'])
-    nodes['f'] = graph18.Cities(value=10, color=graph18.colors.y, stop_type='town', capacity=1)
+    nodes['a'] = graph18.City(value=10, color=graph18.colors.y, stop_type='city', capacity=1)
+    nodes['b'] = graph18.City(value=30, color=graph18.colors.y, stop_type='city', capacity=1, owners=[prr])
+    nodes['c'] = graph18.City(value=20, color=graph18.colors.g, stop_type='city', capacity=1, owners=[bo])
+    nodes['d'] = graph18.City(value=10, color=graph18.colors.y, stop_type='town', capacity=1)
+    nodes['e'] = graph18.City(value=20, color=graph18.colors.y, stop_type='city', capacity=1, owners=[nyc])
+    nodes['f'] = graph18.City(value=10, color=graph18.colors.y, stop_type='town', capacity=1)
+    nodes['g'] = graph18.City(value=40, color=graph18.colors.y, stop_type='city', capacity=2)
 
-    G.add_edge(nodes['a'], nodes['b'])
-    G.add_edge(nodes['b'], nodes['b'])
-    G.add_edge(nodes['a'], nodes['c'])
-    G.add_edge(nodes['a'], nodes['d'])
-    G.add_edge(nodes['e'], nodes['f'])
+    G.add_rail(nodes['a'], nodes['b'])
+    G.add_rail(nodes['b'], nodes['b'])
+    G.add_rail(nodes['a'], nodes['c'])
+    G.add_rail(nodes['a'], nodes['d'])
+    G.add_rail(nodes['e'], nodes['f'])
+    G.add_rail(nodes['d'], nodes['g'])
+    G.add_rail(nodes['e'], nodes['g'])
+    G.add_rail(nodes['d'], nodes['b'])
+    G.add_rail(nodes['c'], nodes['e'])
     return G
 
 

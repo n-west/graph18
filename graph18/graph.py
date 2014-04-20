@@ -24,12 +24,14 @@ that are useful for working with 18xx problems.
 
 import networkx as nx
 
-class Cities(object):
+from companies import Company, null_company
+
+class City(object):
     '''
     This class contains all of the information required to calculate
     revenue for a city. It is the primary graph node.
     '''
-    def __init__(self, value, color=0, stop_type='city', capacity=1, owners=['']):
+    def __init__(self, value, color=0, stop_type='city', capacity=1, owners=[null_company]):
         '''
         Parameters:
             value: the revenue when passing through the city
@@ -46,6 +48,7 @@ class Cities(object):
         self.set_stop_type(stop_type)
 
         assert capacity > 0, "%r is not a number above 0. Should be int"
+        self.set_capacity(capacity)
 
         # this better be a number
         self.set_value(value)
@@ -55,21 +58,51 @@ class Cities(object):
     def set_value(self, value):
         self.value = value
 
-    def set_stop_type(self, stop_type):
-        assert (stop_type == 'city' or stop_type == 'town'), \
-            "%r is not a city or town" % stop_type
-        self.stop_type = stop_type
-
     # there's a color helper class in plot.py but this class doesn't care about it
     def set_color(self, color):
         self.color = color
 
-    def add_owner(self, owner):
-        assert isinstance(owner, basestring), \
-            "%r is not a string" % owner
+    def set_stop_type(self, stop_type):
+        assert (stop_type == 'city' or stop_type == 'town'), \
+            "%r is not a city or town" % stop_type
+        self.stop_type = stop_type
+    
+    def set_capacity(self, capacity):
+        self.capacity = capacity
 
-        if self.owners[0] == '':
+    def add_owner(self, owner):
+        assert isinstance(owner, Company), \
+            "%r is not a Company" % owner
+
+        if self.owners[0] == null_company:
             self.owners.pop(0)
         self.owners.append(owner)
 
 
+
+class Graph(nx.Graph):
+    '''
+    This is the 18xx Graph class that inherits from a networkx graph.
+    graph18 users should be create one of these and use the wrapper
+    functions for adding and modifying cities rather than dealing directly
+    with networkx.
+    '''
+    def add_city(self, city):
+        '''
+        Wrapper for networkx add_node. Using this rather than underlying
+        networkx functions ensure that node attributes get set properly.
+        '''
+        self.add_node(city, capacity=city.capacity, owners=city.owners, value=city.value, stop_type=city.stop_type)
+
+    def add_rail(self, city1, city2):
+        '''
+        Wrapper for networkx add_edge. Using this rather than underlying
+        networkx functions ensures that node attributes get set properly.
+        '''
+        if city1 not in self.nodes():
+            self.add_city(city1)
+        if city2 not in self.nodes():
+            self.add_city(city2)
+
+        self.add_edge(city1, city2)
+    
