@@ -1,0 +1,8 @@
+
+Graph18
+======
+
+This will eventually be a route calculator for 18xx games. It provides
+and interface to create graphs of 18xx cities that can be plotted (via
+networkx and matplotlib) from a graph theoretic perspective.
+
