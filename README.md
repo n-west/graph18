@@ -23,11 +23,11 @@ A graph representing a (simple) 1830 board.
 
 From the broad perspective of a hypothetical B&O the entire graph view changes
 
-![Generic graph with perspective](https://github.com/n-west/graph18/blob/master/resources/graph_perspective.png "Generic 18xx Graph with perspective")
+![Generic graph with perspective](https://raw.githubusercontent.com/n-west/graph18/master/resources/graph_perspective.png "Generic 18xx Graph with perspective")
 
 From that broad perspective we can make a subgraph for the B&O with endpoints where tokens make a hard stop.
 
-![Broad perspective subgraph](https://github.com/n-west/graph18/blob/master/resources/subgraph_broad_perspective.png "Generic 18xx SubGraph with broad perspective")
+![Broad perspective subgraph](https://raw.githubusercontent.com/n-west/graph18/master/resources/subgraph_broad_perspective.png "Generic 18xx SubGraph with broad perspective")
 
 Alternatively we can have a narrow perspective which limits the end-points to nodes we can reach with our current trains (a 2-train in this example).
 
