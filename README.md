@@ -19,7 +19,7 @@ An example:
 
 A graph representing a (simple) 1830 board.
 
-![Generic graph plotted with networkx](https://github.com/n-west/graph18/blob/master/resources/graph_generic.png "Generic 18xx Graph")
+![Generic graph plotted with networkx](https://raw.githubusercontent.com/n-west/graph18/master/resources/graph_generic.png "Generic 18xx Graph")
 
 From the broad perspective of a hypothetical B&O the entire graph view changes
 
