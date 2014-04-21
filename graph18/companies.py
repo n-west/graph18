@@ -165,7 +165,7 @@ class Company(object):
 
         # Step 3
         self.graph_perspective = my_graph.subgraph(accessible_nodes[0])
-        return self.graph_perspective
+        return accessible_nodes[0]
 
     def __hash__(self):
         return hash(self.name)

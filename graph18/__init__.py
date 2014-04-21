@@ -23,7 +23,7 @@ hex colors.
 # You should have received a copy of the GNU General Public License
 # along with graph18.  If not, see <http://www.gnu.org/licenses/>.
 
-from plot import graph_18xx, colors
+from plot import draw_18xx, colors
 from graph import City, Graph
 from companies import Company, Train, PlusTrain
 

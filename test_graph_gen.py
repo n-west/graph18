@@ -48,7 +48,7 @@ def main():
     nodes['a'] = graph18.City(pos=(0,0), value=10, color=graph18.colors.y, stop_type='city', capacity=1)
     nodes['b'] = graph18.City(pos=(0,1), value=30, color=graph18.colors.y, stop_type='city', capacity=1, owners=[prr])
     nodes['c'] = graph18.City(pos=(0,2), value=20, color=graph18.colors.g, stop_type='city', capacity=1, owners=[bo])
-    nodes['d'] = graph18.City(pos=(0,3), value=10, color=graph18.colors.y, stop_type='town', capacity=1)
+    nodes['d'] = graph18.City(pos=(0,3), value=10, color=graph18.colors.g, stop_type='town', capacity=1)
     nodes['e'] = graph18.City(pos=(2,1), value=20, color=graph18.colors.b, stop_type='city', capacity=1, owners=[nynh])
     nodes['f'] = graph18.City(pos=(2,2), value=10, color=graph18.colors.y, stop_type='town', capacity=1)
     nodes['g'] = graph18.City(pos=(2,3), value=40, color=graph18.colors.y, stop_type='city', capacity=2)
@@ -63,13 +63,19 @@ def main():
     G.add_rail(nodes['d'], nodes['b'])
     G.add_rail(nodes['c'], nodes['e'])
 
-    graph18.graph_18xx(G)
+    # Plot the entire graph
+    graph18.draw_18xx(G, title='Example 18xx graph')
 
-    bo.get_perspective(G)
-    graph18.graph_18xx(bo.graph_perspective)
+    # Plot the entire graph highlighting bo tokens
+    accessible_nodes = bo.get_perspective(G)
+    graph18.draw_18xx(G, company=bo, node_list=accessible_nodes, title='Whole graph highlighting nodes with B&O tokens and extra highlighting for nodes reachable by B&O')
 
-    bo.get_perspective(G, True)
-    graph18.graph_18xx(bo.graph_perspective)
+    # Plot the graph from bo's broad perspective
+    graph18.draw_18xx(bo.graph_perspective, company=bo, node_list=accessible_nodes, title='Sub-graph of nodes that B&O can "see", highliting nodes with B&O tokens')
+
+    # Plot the graph from bo's narrow perspective
+    accessible_nodes = bo.get_perspective(G, True)
+    graph18.draw_18xx(bo.graph_perspective, company=bo, node_list=accessible_nodes, title='Sub-graph of nodes that B&O trains could potentially run to, highliting nodes with B&O tokens')
 
 
 if __name__ == '__main__':
