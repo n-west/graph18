@@ -71,7 +71,6 @@ def graph_18xx(G, scale=50.0):
             city_nodes.append(node)
             city_weights.append(node.value*scale)
             city_colors.append(node.color)
-    print city_colors
 
     # define the y/g/b color map
     cmap = mpcolors.ListedColormap(['yellow', 'green', 'brown', 'gray'])

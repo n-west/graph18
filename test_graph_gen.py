@@ -25,23 +25,18 @@
 import graph18
 
 def main():
-    G = generate_graph()
-    graph18.graph_18xx(G)
-
-
-def generate_graph():
     '''
-    This is just an example usage that generates a graph
+    basically just test all of the features
     '''
 
     two_train = graph18.Train(2)
-    two_plus_train = graph18.Train(0,2,2)
+    two_plus_train = graph18.Train(2)
     three_train = graph18.Train(3)
-    three_plus_train = graph18.Train(0,3,3)
+    three_plus_train = graph18.Train(3)
 
     prr = graph18.Company('Pennsylvannia RailRoad', [two_train])
-    nyc = graph18.Company('New York Central', [two_plus_train, two_train])
-    bo = graph18.Company('Baltimore & Ohio')
+    nyc = graph18.Company('New York Central', [two_train, two_train])
+    bo = graph18.Company('Baltimore & Ohio', [two_train])
     nynh = graph18.nynh
 
     bo.add_train(three_train)
@@ -50,13 +45,13 @@ def generate_graph():
 
     G = graph18.Graph()
     nodes = dict()
-    nodes['a'] = graph18.City(value=10, color=graph18.colors.y, stop_type='city', capacity=1)
-    nodes['b'] = graph18.City(value=30, color=graph18.colors.y, stop_type='city', capacity=1, owners=[prr])
-    nodes['c'] = graph18.City(value=20, color=graph18.colors.g, stop_type='city', capacity=1, owners=[bo])
-    nodes['d'] = graph18.City(value=10, color=graph18.colors.y, stop_type='town', capacity=1)
-    nodes['e'] = graph18.City(value=20, color=graph18.colors.y, stop_type='city', capacity=1, owners=[nyc])
-    nodes['f'] = graph18.City(value=10, color=graph18.colors.y, stop_type='town', capacity=1)
-    nodes['g'] = graph18.City(value=40, color=graph18.colors.y, stop_type='city', capacity=2)
+    nodes['a'] = graph18.City(pos=(0,0), value=10, color=graph18.colors.y, stop_type='city', capacity=1)
+    nodes['b'] = graph18.City(pos=(0,1), value=30, color=graph18.colors.y, stop_type='city', capacity=1, owners=[prr])
+    nodes['c'] = graph18.City(pos=(0,2), value=20, color=graph18.colors.g, stop_type='city', capacity=1, owners=[bo])
+    nodes['d'] = graph18.City(pos=(0,3), value=10, color=graph18.colors.y, stop_type='town', capacity=1)
+    nodes['e'] = graph18.City(pos=(2,1), value=20, color=graph18.colors.b, stop_type='city', capacity=1, owners=[nynh])
+    nodes['f'] = graph18.City(pos=(2,2), value=10, color=graph18.colors.y, stop_type='town', capacity=1)
+    nodes['g'] = graph18.City(pos=(2,3), value=40, color=graph18.colors.y, stop_type='city', capacity=2)
 
     G.add_rail(nodes['a'], nodes['b'])
     G.add_rail(nodes['b'], nodes['b'])
@@ -67,12 +62,20 @@ def generate_graph():
     G.add_rail(nodes['e'], nodes['g'])
     G.add_rail(nodes['d'], nodes['b'])
     G.add_rail(nodes['c'], nodes['e'])
-    return G
+
+    graph18.graph_18xx(G)
+
+    bo.get_perspective(G)
+    graph18.graph_18xx(bo.graph_perspective)
+
+    bo.get_perspective(G, True)
+    graph18.graph_18xx(bo.graph_perspective)
 
 
 if __name__ == '__main__':
-    try:
-        main()
-    except KeyboardInterrupt:
-        raise "User halted"
+    main()
+    #try:
+    #    main()
+    #except KeyboardInterrupt as e:
+    #    raise e
 

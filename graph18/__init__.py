@@ -25,7 +25,7 @@ hex colors.
 
 from plot import graph_18xx, colors
 from graph import City, Graph
-from companies import Company, Train
+from companies import Company, Train, PlusTrain
 
 from companies import null_company, prr, nyc, bo, erie, nynh, cp, bm, co 
 

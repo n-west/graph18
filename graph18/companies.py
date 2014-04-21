@@ -21,40 +21,80 @@ an interface class to let the user define new companies.
 # You should have received a copy of the GNU General Public License
 # along with graph18.  If not, see <http://www.gnu.org/licenses/>.
 
+# Note: a standard 1830 train actually could be inherited from
+# the plus-train in variants, but that feels weird to do so
+# instead each train type will just have its own class.
+# The most important thing in train classes is the route searches
+
+import networkx as nx
 
 class Train(object):
     '''
-    Defines train attributes that can be held by a company
+    Base Train class that follows standard 1830 rules
     '''
-    def __init__(self, all_cap, city_cap=0, town_cap=0, ndouble=0):
+    def __init__(self, capacity):
         '''
-        Trains(all_cap[, city_cap=0, town_cap=0])
+        Train(capacity)
 
         Define a train based on how many towns and cities
-        it can be run through. The idea here is to keep
-        this generic enough to be used for sveral expansions
-        that all have slightly different train routes.
-        
+        it can be run through. This follows the standard
+        1830 ruleset 
+
         Parameters:
-            all_cap - for standard trains this is the number
-                so that they can go through all_cap towns
-                and cities. This should be 0 for "plus"
-                trains.
-            city_cap - for "plus" trains or OE-style standard
-                trains this is the number of cities it can run
-                through. The assumption for OE-style trains
-                is that it's always better to run through cities
-                rather than towns
-            town_cap - for "plus" trains this indicates how many
-                towns can be run through without deducting from
-                how many cities can be run
-            ndouble - number of cities that can be doubled
+            capacity -  cities and towns that can be run through
         '''
-        self.all_cap = all_cap
-        self.city_cap = city_cap
-        self.town_cap = town_cap
-        self.ndouble = ndouble
-        
+        self.capacity = capacity
+
+    def dfs_accessible_nodes(self, graph, start, capacity):
+        '''
+        A recursive depth-first search of a graph for a sub-graph 
+        that this train can traverse.
+
+        Parameters:
+            graph - the graph being searched for routes
+            start - the starting node of the search
+
+        Note:
+            For high depths this will use lots of memory because
+            each iteration makes its own copy of the graph (although
+            graphs shrink for each depth). If that becomes an issue
+            we can remove disjoint sections on each iteration
+        '''
+        neighbors = graph.neighbors(start)
+        accessible_nodes = [start] + neighbors
+        ng = graph.copy()
+        ng.remove_node(start)
+        for neighbor in neighbors:
+          # if it's possible to go through this city/town then continue
+          # traversing the depth
+          if capacity > 1 and \
+                 (neighbor.capacity - neighbor.owners.__len__() > 0 or \
+                 neighbor.owners[0] == null_company):
+            accessible_nodes += self.dfs_accessible_nodes(ng, neighbor, capacity-1)
+
+        return accessible_nodes
+
+
+class PlusTrain(object):
+    def __init__(self, capacity):
+        '''
+        Train(capacity)
+
+        Define a plus train based on how many towns and cities
+        it can be run through. This follows the rulset where
+        an n+n train can run through n cities and n towns
+        which appears in many 1830 variants.
+
+        Parameters:
+            capacity - cities and towns that can be run through
+
+        Note:
+            This does not follow the 18oe plus-style train that
+            can pass through any towns it wishes.
+        '''
+        self.city_capacity = capacity
+        self.town_capacity = capacity
+       
 
 class Company(object):
     '''
@@ -87,6 +127,52 @@ class Company(object):
         Use this when a company acquires a new train.
         '''
         self.trains.append(train)
+
+
+    def get_perspective(self, graph, narrow=False):
+        '''
+        Return and store a sub-graph from the perspective of given
+        company perspective(company[, narrow=False])
+
+        The graph from the perspective of the company will stop at
+        nodes the company cannot cross due to tokens blocking them.
+        If narrow is true then the perspective ends on nodes that
+        the company cannot reach if an owned train cannot go that 
+        far.
+
+        This will work by
+         1. Creating a list of nodes where we have tokens
+         2. With the best trains find accessible nodes
+         3. Return a subgraph based on list of accesible nodes
+        '''
+        # Step 1
+        my_graph = graph.copy()
+        token_nodes = [n for n in my_graph.nodes() if n.owners.__contains__(self)]
+
+        # Step 2
+        if narrow:
+            best_train = Train(0)
+            for train in self.trains:
+                if train.capacity > best_train.capacity:
+                    best_train = train
+            print "best train has capacity %i" % best_train.capacity
+            train_dfs = lambda start: best_train.dfs_accessible_nodes(my_graph, start, best_train.capacity-1)
+            accessible_nodes = map(train_dfs, token_nodes)
+        else:
+            imag_train = Train(9999)
+            train_dfs = lambda start: imag_train.dfs_accessible_nodes(my_graph, start, 9999)
+            accessible_nodes = map(train_dfs, token_nodes)
+
+        # Step 3
+        self.graph_perspective = my_graph.subgraph(accessible_nodes[0])
+        return self.graph_perspective
+
+    def __hash__(self):
+        return hash(self.name)
+    
+    def __eq__(self, other):
+        return self.name == other.name
+        
         
 null_company = Company('null')
 prr = Company('Pennsylvannia RailRoad')

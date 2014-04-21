@@ -31,7 +31,7 @@ class City(object):
     This class contains all of the information required to calculate
     revenue for a city. It is the primary graph node.
     '''
-    def __init__(self, value, color=0, stop_type='city', capacity=1, owners=[null_company]):
+    def __init__(self, pos, value, color=0, stop_type='city', capacity=1, owners=[null_company]):
         '''
         Parameters:
             value: the revenue when passing through the city
@@ -40,10 +40,12 @@ class City(object):
             capacity: number of station markers possible
             owners: list of companies with station markes persent. (owners.__len__() <= capacity)
         '''
-        self.owners = ['']
+        self.pos = pos
+        self.row = pos[0]
+        self.col = pos[1]
+        self.owners = owners
         assert isinstance(owners, (list, tuple)), \
             "%r is not an iterable object like list or tuple" % owner
-        map(self.add_owner, owners)
 
         self.set_stop_type(stop_type)
 
@@ -78,6 +80,12 @@ class City(object):
             self.owners.pop(0)
         self.owners.append(owner)
 
+    def __hash__(self):
+        return hash(self.pos)
+
+    def __eq__(self, other):
+        return self.pos == other.pos
+
 
 
 class Graph(nx.Graph):
@@ -92,7 +100,7 @@ class Graph(nx.Graph):
         Wrapper for networkx add_node. Using this rather than underlying
         networkx functions ensure that node attributes get set properly.
         '''
-        self.add_node(city, capacity=city.capacity, owners=city.owners, value=city.value, stop_type=city.stop_type)
+        self.add_node(city )
 
     def add_rail(self, city1, city2):
         '''
@@ -105,4 +113,4 @@ class Graph(nx.Graph):
             self.add_city(city2)
 
         self.add_edge(city1, city2)
-    
+
