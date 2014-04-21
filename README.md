@@ -31,4 +31,4 @@ From that broad perspective we can make a subgraph for the B&O with endpoints wh
 
 Alternatively we can have a narrow perspective which limits the end-points to nodes we can reach with our current trains (a 2-train in this example).
 
-![Narrow perspective subgraph](https://github.com/n-west/graph18/blob/master/resources/subgraph_narrow_perspective.png "Generic 18xx SubGraph with narrow perspective")
+![Narrow perspective subgraph](https://raw.githubusercontent.com/n-west/graph18/master/resources/subgraph_narrow_perspective.png "Generic 18xx SubGraph with narrow perspective")
